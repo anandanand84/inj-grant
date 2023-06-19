@@ -1,7 +1,7 @@
 <script lang="ts">
     import MessageTypes from './messagetypes';
     import { Checkbox, Button, Tag, TextInput } from "carbon-components-svelte";
-    import { MsgSend, MsgGrant, MsgRevoke } from '@injectivelabs/sdk-ts'
+    import { MsgSend, MsgGrant, MsgRevoke, MsgRewardsOptOut } from '@injectivelabs/sdk-ts'
     import { WalletStrategy, Wallet, MsgBroadcaster } from '@injectivelabs/wallet-ts'
     import { Network } from '@injectivelabs/networks'
     import { ChainId } from '@injectivelabs/ts-types'
@@ -85,6 +85,32 @@
             notifier.error(`Error in transaction`, (err as any).message, 3000, ``);
         }
         updateGrants();
+    }
+
+    async function optOut() {
+        let optOutMessage = MsgRewardsOptOut.fromJSON({
+            sender: $account
+        });
+
+        let msgs = [optOutMessage];
+
+        let broadCastMessage = {
+            address: $account,
+            msgs
+        }
+
+        try {
+            let result = await broadCaster.broadcast(broadCastMessage);
+            if (result.code == 0 && result.txHash) {
+                notifier.success(`Transaction successful`, `Transaction hash: ${result.txHash}`, 3000, ``);
+            } else {
+                notifier.error(`Error in transaction`, result.rawLog, 3000, ``);
+            }
+            console.log(result);
+        }catch(err) {
+            console.log(err);
+            notifier.error(`Error in transaction`, (err as any).message, 3000, ``);
+        }
     }
 
     async function approveGrants() {
@@ -186,6 +212,9 @@
     
     <div class="flex flex-row w-full justify-end mt-10">
         <Button kind="primary" on:click={approveGrants}>Approve Grants</Button>
+    </div>
+    <div class="flex flex-row w-full justify-end mt-10">
+        <Button kind="danger" on:click={optOut}>Opt Out Rewards</Button>
     </div>
 </div>
 <div class="ml-10 mt-10 shadow-2xl p-10 flex flex-col justify-between" style="width: 1124px">
