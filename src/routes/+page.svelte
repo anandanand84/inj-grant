@@ -6,7 +6,9 @@
 	import type { CarbonTheme } from 'carbon-components-svelte/types/Theme/Theme.svelte';
     let theme:CarbonTheme = "g90";
     import Injective from './Injective/Injective.svelte';
+	// import Dydx from './Dydx/Dydx.svelte';
 </script>
 <NotificationLayout/>
 <Theme bind:theme persist persistKey="__carbon-theme" />
 <Injective></Injective>
+<!-- <Dydx></Dydx> -->

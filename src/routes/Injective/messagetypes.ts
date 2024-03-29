@@ -9,5 +9,7 @@ export default [
     "/injective.exchange.v1beta1.MsgBatchCreateDerivativeLimitOrders",
     "/injective.exchange.v1beta1.MsgCancelDerivativeOrder",
     "/injective.exchange.v1beta1.MsgBatchCancelDerivativeOrders",
-    "/injective.exchange.v1beta1.MsgBatchUpdateOrders"
+    "/injective.exchange.v1beta1.MsgBatchUpdateOrders",
+    // "/dydxprotocol.clob.MsgPlaceOrder",
+    // "/dydxprotocol.clob.MsgCancelOrder"
 ]
