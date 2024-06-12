@@ -20,11 +20,13 @@ export async function handleFetch({ request, fetch }) {
 
 export async function handle({ event, resolve }) {
     console.log("Hello");
-	if (event.url.pathname === '/ping') {
-		return new Response('pong');
+    if (event.url.pathname === '/ping') {
+        return new Response('pong');
 	}
     if (event.url.pathname.includes('/cosmos/')) {
+        console.log("Hello 1");
         let newurl = event.request.url.replace(/(https?:\/\/[^\/]+)\/cosmos/, 'https://sentry.lcd.injective.network/cosmos');
+        console.log("new url", newurl);
         let request = new Request(
             newurl,
             event.request
