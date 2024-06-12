@@ -46,12 +46,12 @@
         walletStrategy: walletStrategy,
         network: Network.Mainnet,
         networkEndpoints: {
-            indexer: 'https://sentry.exchange.grpc-web.injective.network',
-            grpc: 'https://sentry.chain.grpc-web.injective.network',
-            rpc: 'https://sentry.tm.injective.network',
-            rest: 'https://sentry.lcd.injective.network',
-            chronos: 'https://sentry.exchange.grpc-web.injective.network',
-            explorer: 'https://sentry.exchange.grpc-web.injective.network',
+            indexer: '/',
+            grpc: '/',
+            rpc: '/',
+            rest: '/',
+            chronos: '/',
+            explorer: '/',
         }
     });
 

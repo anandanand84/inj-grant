@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-inj-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-inj-proxy
+  template:
+    metadata:
+      labels:
+        app: nginx-inj-proxy
+    spec:
+      containers:
+      - name: nginx-inj-proxy
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-inj-proxy-config
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-inj-proxy-config
+data:
+  nginx.conf: |
+    worker_processes  1;
+    events {
+        worker_connections  1024;
+    }
+    http {
+        server {
+            listen 80;
+            server_name _;
+            
+            location / {
+                proxy_ssl_server_name on;
+                proxy_pass https://sentry.lcd.injective.network;
+                proxy_set_header Host sentry.lcd.injective.network;
+            }
+        }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-inj-proxy
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: nginx-inj-proxy
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: injective-proxy
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - sandbox.trade.dvchain.co
+    secretName: sandbox-tls-secret
+  rules:
+  - host: sandbox.trade.dvchain.co
+    http:
+      paths:
+      - path: /cosmos/
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-inj-proxy  # Use the single service name
+            port: 
+              number: 80  # Update if your service port is different
+      - path: /indexer/
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-inj-proxy  # Use the single service name
+            port:
+              number: 80  # Update if your service port is different
+      - path: /grpc/
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-inj-proxy  # Use the single service name
+            port: 
+              number: 80  # Update if your service port is different
+      - path: /rpc/
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-inj-proxy  # Use the single service name
+            port: 
+              number: 80  # Update if your service port is different
+      - path: /rest/
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-inj-proxy  # Use the single service name
+            port: 
+              number: 80  # Update if your service port is different
+      - path: /chronos/
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-inj-proxy  # Use the single service name
+            port: 
+              number: 80  # Update if your service port is different
+      - path: /explorer/
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-inj-proxy  # Use the single service name
+            port: 
+              number: 80  # Update if your service port is different
